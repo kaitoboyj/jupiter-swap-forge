@@ -4,12 +4,13 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Token } from "@/data/tokens";
+import { SolanaToken } from "@/hooks/useSolanaTokens";
 import { cn } from "@/lib/utils";
 
 interface TokenSelectorProps {
-  tokens: Token[];
-  selectedToken: Token | null;
-  onSelectToken: (token: Token) => void;
+  tokens: Token[] | SolanaToken[];
+  selectedToken: Token | SolanaToken | null;
+  onSelectToken: (token: Token | SolanaToken) => void;
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
@@ -29,7 +30,7 @@ export const TokenSelector = ({
       token.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const handleSelect = (token: Token) => {
+  const handleSelect = (token: Token | SolanaToken) => {
     onSelectToken(token);
     onOpenChange(false);
     setSearchQuery("");

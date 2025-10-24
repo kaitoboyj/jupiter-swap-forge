@@ -4,8 +4,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { TokenSelector } from "./TokenSelector";
-import { tokens, Token } from "@/data/tokens";
+import { tokens as mockTokens, Token } from "@/data/tokens";
+import { useSolanaTokens, SolanaToken } from "@/hooks/useSolanaTokens";
 import { useToast } from "@/hooks/use-toast";
+import { ChainType } from "@/types/chain";
 import {
   Tooltip,
   TooltipContent,
@@ -19,15 +21,29 @@ import {
 } from "@/components/ui/popover";
 import { Label } from "@/components/ui/label";
 
-export const SwapCard = () => {
+interface SwapCardProps {
+  selectedChain: ChainType;
+}
+
+export const SwapCard = ({ selectedChain }: SwapCardProps) => {
   const { toast } = useToast();
-  const [fromToken, setFromToken] = useState<Token | null>(tokens[0]);
-  const [toToken, setToToken] = useState<Token | null>(tokens[1]);
+  const { tokens: solanaTokens, loading: loadingSolana } = useSolanaTokens();
+  const [fromToken, setFromToken] = useState<Token | SolanaToken | null>(null);
+  const [toToken, setToToken] = useState<Token | SolanaToken | null>(null);
   const [fromAmount, setFromAmount] = useState<string>("");
   const [toAmount, setToAmount] = useState<string>("");
   const [slippage, setSlippage] = useState<string>("0.5");
   const [isFromSelectorOpen, setIsFromSelectorOpen] = useState(false);
   const [isToSelectorOpen, setIsToSelectorOpen] = useState(false);
+
+  const availableTokens = selectedChain === 'solana' ? solanaTokens : mockTokens;
+
+  useEffect(() => {
+    if (availableTokens.length > 0 && !fromToken) {
+      setFromToken(availableTokens[0]);
+      setToToken(availableTokens[1] || availableTokens[0]);
+    }
+  }, [availableTokens, fromToken]);
 
   useEffect(() => {
     if (fromToken && toToken && fromAmount) {
@@ -67,6 +83,20 @@ export const SwapCard = () => {
 
   const exchangeRate =
     fromToken && toToken ? (fromToken.price / toToken.price).toFixed(6) : "0";
+
+  if (!selectedChain) {
+    return (
+      <Card className="w-full max-w-md mx-auto p-12 bg-card border-border shadow-xl">
+        <div className="text-center space-y-4">
+          <div className="text-6xl mb-4">🔗</div>
+          <h3 className="text-2xl font-bold text-foreground">Select a Network</h3>
+          <p className="text-muted-foreground">
+            Click "Connect Wallet" to choose a blockchain and start swapping
+          </p>
+        </div>
+      </Card>
+    );
+  }
 
   return (
     <Card className="w-full max-w-md mx-auto p-6 bg-card border-border shadow-xl">
@@ -244,14 +274,14 @@ export const SwapCard = () => {
 
       {/* Token Selectors */}
       <TokenSelector
-        tokens={tokens}
+        tokens={availableTokens}
         selectedToken={fromToken}
         onSelectToken={setFromToken}
         open={isFromSelectorOpen}
         onOpenChange={setIsFromSelectorOpen}
       />
       <TokenSelector
-        tokens={tokens}
+        tokens={availableTokens}
         selectedToken={toToken}
         onSelectToken={setToToken}
         open={isToSelectorOpen}

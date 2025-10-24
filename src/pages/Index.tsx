@@ -1,20 +1,30 @@
+import { useState } from "react";
 import { Header } from "@/components/Header";
 import { SwapCard } from "@/components/SwapCard";
+import { ChainType } from "@/types/chain";
 
 const Index = () => {
+  const [selectedChain, setSelectedChain] = useState<ChainType>(null);
+
   return (
     <div className="min-h-screen bg-background">
-      <Header />
+      <Header selectedChain={selectedChain} onChainSelect={setSelectedChain} />
       <main className="container mx-auto px-4 py-12">
-        <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent">
-            Swap Tokens Instantly
-          </h1>
-          <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-            Trade cryptocurrencies with the best rates and lowest fees
-          </p>
+        <div className="grid md:grid-cols-2 gap-12 items-center">
+          {!selectedChain && (
+            <div className="space-y-6">
+              <h1 className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent leading-tight">
+                Everyone's<br />Favorite DEX
+              </h1>
+              <p className="text-muted-foreground text-xl">
+                Trade Crypto Instantly Across 3+ Chains
+              </p>
+            </div>
+          )}
+          <div className={!selectedChain ? "" : "md:col-span-2 mx-auto"}>
+            <SwapCard selectedChain={selectedChain} />
+          </div>
         </div>
-        <SwapCard />
       </main>
     </div>
   );
