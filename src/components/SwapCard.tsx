@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { TokenSelector } from "./TokenSelector";
+import { ChainSelector } from "./ChainSelector";
 import { tokens as mockTokens, Token } from "@/data/tokens";
 import { useSolanaTokens, SolanaToken } from "@/hooks/useSolanaTokens";
 import { useToast } from "@/hooks/use-toast";
@@ -23,9 +24,10 @@ import { Label } from "@/components/ui/label";
 
 interface SwapCardProps {
   selectedChain: ChainType;
+  onChainSelect?: (chain: ChainType) => void;
 }
 
-export const SwapCard = ({ selectedChain }: SwapCardProps) => {
+export const SwapCard = ({ selectedChain, onChainSelect }: SwapCardProps) => {
   const { toast } = useToast();
   const { tokens: solanaTokens, loading: loadingSolana } = useSolanaTokens();
   const [fromToken, setFromToken] = useState<Token | SolanaToken | null>(null);
@@ -35,6 +37,7 @@ export const SwapCard = ({ selectedChain }: SwapCardProps) => {
   const [slippage, setSlippage] = useState<string>("0.5");
   const [isFromSelectorOpen, setIsFromSelectorOpen] = useState(false);
   const [isToSelectorOpen, setIsToSelectorOpen] = useState(false);
+  const [showChainSelector, setShowChainSelector] = useState(false);
 
   const availableTokens = selectedChain === 'solana' ? solanaTokens : mockTokens;
 
@@ -66,6 +69,11 @@ export const SwapCard = ({ selectedChain }: SwapCardProps) => {
   };
 
   const handleSwap = () => {
+    if (!selectedChain) {
+      setShowChainSelector(true);
+      return;
+    }
+
     if (!fromToken || !toToken || !fromAmount) {
       toast({
         title: "Invalid Swap",
@@ -269,7 +277,7 @@ export const SwapCard = ({ selectedChain }: SwapCardProps) => {
         className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold py-6 text-lg rounded-xl shadow-lg transition-all hover:shadow-primary/50"
         disabled={!fromAmount || !fromToken || !toToken}
       >
-        Swap
+        {!selectedChain ? "Select Network to Swap" : "Swap"}
       </Button>
 
       {/* Token Selectors */}
@@ -287,6 +295,15 @@ export const SwapCard = ({ selectedChain }: SwapCardProps) => {
         open={isToSelectorOpen}
         onOpenChange={setIsToSelectorOpen}
       />
+
+      {/* Chain Selector */}
+      {onChainSelect && (
+        <ChainSelector
+          open={showChainSelector}
+          onOpenChange={setShowChainSelector}
+          onSelectChain={onChainSelect}
+        />
+      )}
     </Card>
   );
 };

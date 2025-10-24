@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { TokenInfo, TokenListProvider } from '@solana/spl-token-registry';
 
 export interface SolanaToken {
   symbol: string;
@@ -11,6 +10,20 @@ export interface SolanaToken {
   change24h: number;
   volume24h: number;
   marketCap: number;
+  tags?: string[];
+}
+
+interface JupiterToken {
+  address: string;
+  chainId: number;
+  decimals: number;
+  name: string;
+  symbol: string;
+  logoURI?: string;
+  tags?: string[];
+  extensions?: {
+    coingeckoId?: string;
+  };
 }
 
 export const useSolanaTokens = () => {
@@ -20,21 +33,21 @@ export const useSolanaTokens = () => {
   useEffect(() => {
     const fetchTokens = async () => {
       try {
-        const tokenListProvider = new TokenListProvider();
-        const tokenList = await tokenListProvider.resolve();
-        const tokenMap = tokenList.filterByChainId(101).getList(); // 101 is Solana mainnet
+        // Fetch from Jupiter API - comprehensive token list including Raydium, Pump.fun, etc.
+        const response = await fetch('https://tokens.jup.ag/tokens');
+        const jupiterTokens: JupiterToken[] = await response.json();
 
-        // Convert to our format with mock prices for now
-        const formattedTokens: SolanaToken[] = tokenMap
-          .filter((token: TokenInfo) => token.symbol && token.name)
-          .slice(0, 50) // Limit to top 50 tokens
-          .map((token: TokenInfo) => ({
+        // Convert to our format with mock prices
+        const formattedTokens: SolanaToken[] = jupiterTokens
+          .filter((token: JupiterToken) => token.symbol && token.name)
+          .map((token: JupiterToken) => ({
             symbol: token.symbol,
             name: token.name,
             address: token.address,
             decimals: token.decimals,
             logoURI: token.logoURI,
-            price: Math.random() * 1000, // Mock price - would fetch from API in production
+            tags: token.tags,
+            price: Math.random() * 1000, // Mock price - would integrate price API in production
             change24h: (Math.random() - 0.5) * 10,
             volume24h: Math.random() * 1000000,
             marketCap: Math.random() * 10000000
@@ -43,7 +56,7 @@ export const useSolanaTokens = () => {
         setTokens(formattedTokens);
         setLoading(false);
       } catch (error) {
-        console.error('Error fetching Solana tokens:', error);
+        console.error('Error fetching Jupiter tokens:', error);
         setLoading(false);
       }
     };
