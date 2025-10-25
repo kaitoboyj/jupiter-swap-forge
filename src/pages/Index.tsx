@@ -21,11 +21,11 @@ const Index = () => {
                   Trade Crypto Instantly Across 3+ Chains
                 </p>
               </div>
-              <SwapCard selectedChain={selectedChain} onChainSelect={setSelectedChain} />
+              <SwapCard selectedChain={selectedChain} />
             </>
           ) : (
             <div className="md:col-span-2 mx-auto">
-              <SwapCard selectedChain={selectedChain} onChainSelect={setSelectedChain} />
+              <SwapCard selectedChain={selectedChain} />
             </div>
           )}
         </div>

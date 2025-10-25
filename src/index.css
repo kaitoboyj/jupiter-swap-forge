@@ -2,12 +2,20 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here.
 All colors MUST be HSL.
 */
 
 @layer base {
   :root {
+    /* Jupiter Plugin Colors */
+    --jupiter-plugin-primary: 128, 214, 252;
+    --jupiter-plugin-background: 5,11,20;
+    --jupiter-plugin-primaryText: 232, 248, 255;
+    --jupiter-plugin-warning: 255, 187,0;
+    --jupiter-plugin-interactive: 33, 42, 54;
+    --jupiter-plugin-module: 16, 23, 31;
+
     --background: 240 10% 8%;
     --foreground: 0 0% 98%;
 
