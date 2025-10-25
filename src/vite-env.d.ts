@@ -2,7 +2,11 @@
 
 interface Window {
   Jupiter: {
-    init: (config: { displayMode: string; enableWalletPassthrough: boolean }) => void;
+    init: (config: { 
+      displayMode: string; 
+      enableWalletPassthrough: boolean;
+      endpoint?: string;
+    }) => void;
     resume: () => void;
   };
 }

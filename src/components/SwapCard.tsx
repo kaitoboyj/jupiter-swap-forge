@@ -13,7 +13,8 @@ export const SwapCard = ({ selectedChain }: SwapCardProps) => {
       window.Jupiter.init({
         displayMode: 'modal',
         enableWalletPassthrough: false,
-      });
+        endpoint: 'https://solitary-cosmopolitan-lambo.solana-mainnet.quiknode.pro/f9bf6bb930b87de47704663c615463c78a05d495/',
+      } as any);
     }
   }, [selectedChain]);
 

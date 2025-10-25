@@ -13,10 +13,7 @@ export const Header = ({ selectedChain, onChainSelect }: HeaderProps) => {
   const [isChainSelectorOpen, setIsChainSelectorOpen] = useState(false);
 
   const handleConnect = () => {
-    if (!selectedChain) {
-      setIsChainSelectorOpen(true);
-      return;
-    }
+    setIsChainSelectorOpen(true);
   };
 
   return (
@@ -35,7 +32,7 @@ export const Header = ({ selectedChain, onChainSelect }: HeaderProps) => {
               className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold px-6"
             >
               <Wallet className="mr-2 h-4 w-4" />
-              Connect Wallet
+              {selectedChain ? `Switch Chain` : 'Connect Wallet'}
             </Button>
           </div>
         </div>
