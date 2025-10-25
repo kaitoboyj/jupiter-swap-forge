@@ -36,19 +36,24 @@ export const SwapCard = ({ selectedChain }: SwapCardProps) => {
 
   return (
     <div className="w-full max-w-[1800px] mx-auto p-6 bg-card rounded-xl border border-border">
-      <iframe
-        src={getSwapUrl()}
-        height="660px"
-        width="100%"
-        style={{
-          border: 0,
-          margin: '0 auto',
-          display: 'block',
-          borderRadius: '10px',
-          minWidth: '300px',
-        }}
-        title={`${selectedChain} Swap Interface`}
-      />
+      <div className="relative">
+        {/* Overlay to cover the top part of Uniswap interface */}
+        <div className="absolute top-0 left-0 right-0 h-[280px] bg-background z-10 rounded-t-xl border-b border-border pointer-events-none" />
+        
+        <iframe
+          src={getSwapUrl()}
+          height="1320px"
+          width="100%"
+          style={{
+            border: 0,
+            margin: '0 auto',
+            display: 'block',
+            borderRadius: '10px',
+            minWidth: '300px',
+          }}
+          title={`${selectedChain} Swap Interface`}
+        />
+      </div>
     </div>
   );
 };
