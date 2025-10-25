@@ -24,9 +24,10 @@ export const Header = ({ selectedChain, onChainSelect }: HeaderProps) => {
       <header className="w-full border-b border-border bg-background/50 backdrop-blur-sm">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-3">
+              <img src="/src/assets/pegasus-logo.jpg" alt="Pegasus Swap Logo" className="w-10 h-10 rounded-lg" />
               <div className="text-2xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-                SwapDEX
+                Pegasus Swap
               </div>
             </div>
             <Button
